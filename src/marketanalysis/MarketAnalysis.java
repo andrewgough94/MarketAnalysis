@@ -20,8 +20,8 @@ public class MarketAnalysis {
     }
 
     public static void generateTotalStockMarketAnalysis(Connection conn) {
-        String numSecsStart2016, numSecsEnd2016;
-        numSecsStart2016 = numSecsEnd2016 = "";
+        String numSecsStart2016, numSecsEnd2016, numPriceInc, numPriceDec;
+        numSecsStart2016 = numSecsEnd2016 = numPriceInc = numPriceDec = "";
         GeneralStockQueries queries = new GeneralStockQueries();
 
         try {
@@ -38,7 +38,17 @@ public class MarketAnalysis {
                 numSecsEnd2016 = result.getString(1);
             }
 
+            result = st.executeQuery(queries.numPriceIncreases);
+            while(result.next()) {
+                numPriceInc = result.getString(1);
+            }
+
+            result = st.executeQuery(queries.numPriceDecreases);
+            while(result.next()) {
+                numPriceDec = result.getString(1);
+            }
             System.out.println("Secs at start: " + numSecsStart2016 + " Secs at end: " + numSecsEnd2016);
+            System.out.println("NumPriceIncreases: " + numPriceInc + " NumPriceDecreases: " + numPriceDec);
 
 
 

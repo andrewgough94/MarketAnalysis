@@ -114,7 +114,7 @@ public class MarketAnalysis {
                 securities11.add(result11.getString(1));
             }
 
-            System.out.println("\n\nTop Five Price Increase 2010:");
+            System.out.println("\n\nTop Five Relative Increase 2010:");
             int i11 = 0;
             while(i11 < securities11.size()) {
                 System.out.print(securities11.get(i11++) + " ");
@@ -140,7 +140,7 @@ public class MarketAnalysis {
                 securities12.add(result12.getString(1));
             }
 
-            System.out.println("\n\nTop Five Price Increase 2011:");
+            System.out.println("\n\nTop Five Relative Increase 2011:");
             int i12 = 0;
             while(i12 < securities12.size()) {
                 System.out.print(securities12.get(i12++) + " ");
@@ -153,7 +153,7 @@ public class MarketAnalysis {
                 securities3.add(result3.getString(1));
             }
 
-            System.out.println("\n\nTop Five ABS Change 2012:");
+            System.out.println("\n\nTop Five Absolute Increase 2012:");
             int i3 = 0;
             while(i3 < securities3.size()) {
                 System.out.print(securities3.get(i3++) + " ");
@@ -166,7 +166,7 @@ public class MarketAnalysis {
                 securities13.add(result13.getString(1));
             }
 
-            System.out.println("\n\nTop Five Price Increase 2012:");
+            System.out.println("\n\nTop Five Relative Increase 2012:");
             int i13 = 0;
             while(i13 < securities13.size()) {
                 System.out.print(securities13.get(i13++) + " ");
@@ -179,7 +179,7 @@ public class MarketAnalysis {
                 securities4.add(result4.getString(1));
             }
 
-            System.out.println("\n\nTop Five ABS Change 2013:");
+            System.out.println("\n\nTop Five Absolute Increase 2013:");
             int i4 = 0;
             while(i4 < securities4.size()) {
                 System.out.print(securities4.get(i4++) + " ");
@@ -192,7 +192,7 @@ public class MarketAnalysis {
                 securities14.add(result14.getString(1));
             }
 
-            System.out.println("\n\nTop Five Price Increase 2013:");
+            System.out.println("\n\nTop Five Relative Increase 2013:");
             int i14 = 0;
             while(i14 < securities14.size()) {
                 System.out.print(securities14.get(i14++) + " ");
@@ -205,7 +205,7 @@ public class MarketAnalysis {
                 securities5.add(result5.getString(1));
             }
 
-            System.out.println("\n\nTop Five ABS Change 2014:");
+            System.out.println("\n\nTop Five Absolute Increase 2014:");
             int i5 = 0;
             while(i5 < securities5.size()) {
                 System.out.print(securities5.get(i5++) + " ");
@@ -218,7 +218,7 @@ public class MarketAnalysis {
                 securities15.add(result15.getString(1));
             }
 
-            System.out.println("\n\nTop Five Price Increase 2014:");
+            System.out.println("\n\nTop Five Relative Increase 2014:");
             int i15 = 0;
             while(i15 < securities15.size()) {
                 System.out.print(securities15.get(i15++) + " ");
@@ -232,7 +232,7 @@ public class MarketAnalysis {
                 securities6.add(result6.getString(1));
             }
 
-            System.out.println("\n\nTop Five ABS Change 2015:");
+            System.out.println("\n\nTop Five Absolute Increase 2015:");
             int i6 = 0;
             while(i6 < securities6.size()) {
                 System.out.print(securities6.get(i6++) + " ");
@@ -246,7 +246,7 @@ public class MarketAnalysis {
                 securities16.add(result16.getString(1));
             }
 
-            System.out.println("\n\nTop Five Price Increase 2015:");
+            System.out.println("\n\nTop Five Relative Increase 2015:");
             int i16 = 0;
             while(i16 < securities16.size()) {
                 System.out.print(securities16.get(i16++) + " ");
@@ -259,7 +259,7 @@ public class MarketAnalysis {
                 securities7.add(result7.getString(1));
             }
 
-            System.out.println("\n\nTop Five ABS Change 2016:");
+            System.out.println("\n\nTop Five Absolute Increase 2016:");
             int i7 = 0;
             while(i7 < securities7.size()) {
                 System.out.print(securities7.get(i7++) + " ");
@@ -272,7 +272,7 @@ public class MarketAnalysis {
                 securities17.add(result17.getString(1));
             }
 
-            System.out.println("\n\nTop Five Price Increase 2016:");
+            System.out.println("\n\nTop Five Relative Increase 2016:");
             int i17 = 0;
             while(i17 < securities17.size()) {
                 System.out.print(securities17.get(i17++) + " ");

@@ -1,7 +1,10 @@
 package marketanalysis;
 
 /**
- * Created by andrewgough94 on 6/12/2017.
+ * Lab 8
+ * Andrew Gough (agough) & Jake Whipple
+ *
+ * File contains the SQL queries for general stock analytics.
  */
 public class GeneralStockQueries {
     String numSecsStart2016 = "select count(distinct ticker) from Prices where day = (select max(distinct day) from Prices where Month(day) = 1 and Year(day) = 2016)";

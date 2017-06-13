@@ -1,7 +1,10 @@
 package marketanalysis;
 
 /**
- * Created by agough on 6/12/17.
+ * Lab 8
+ * Andrew Gough (agough) & Jake Whipple
+ *
+ * File contains the SQL queries for individual stock analytics.
  */
 public class IndividualStockQueries {
     private static String ticker;

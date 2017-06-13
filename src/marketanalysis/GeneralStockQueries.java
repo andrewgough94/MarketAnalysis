@@ -50,113 +50,113 @@ public class GeneralStockQueries {
             "limit 10;";
 
 
-    String topFiveABS2010 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ABS(a2.Close - a1.open) as 'Change'\n" +
+    String topFiveABS2010 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2010-01-04'\n" +
             "AND a2.Day = '2010-12-31'\n" +
-            "ORDER BY ABS(a2.close - a1.open) DESC\n" +
+            "ORDER BY (a2.close - a1.open) DESC\n" +
             "LIMIT 5;\n";
 
-    String topFiveABS2011 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ABS(a2.Close - a1.open) as 'Change'\n" +
+    String topFiveABS2011 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2011-01-03'\n" +
             "AND a2.Day = '2011-12-30'\n" +
-            "ORDER BY ABS(a2.close - a1.open) DESC\n" +
+            "ORDER BY (a2.close - a1.open) DESC\n" +
             "LIMIT 5;";
-    String topFiveABS2012 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ABS(a2.Close - a1.open) as 'Change'\n" +
+    String topFiveABS2012 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2012-01-03'\n" +
             "AND a2.Day = '2012-12-31'\n" +
-            "ORDER BY ABS(a2.close - a1.open) DESC\n" +
+            "ORDER BY (a2.close - a1.open) DESC\n" +
             "LIMIT 5;";
 
-    String topFiveABS2013 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ABS(a2.Close - a1.open) as 'Change'\n" +
+    String topFiveABS2013 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2013-01-02'\n" +
             "AND a2.Day = '2013-12-31'\n" +
-            "ORDER BY ABS(a2.close - a1.open) DESC\n" +
+            "ORDER BY (a2.close - a1.open) DESC\n" +
             "LIMIT 5;";
 
-    String topFiveABS2014 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ABS(a2.Close - a1.open) as 'Change'\n" +
+    String topFiveABS2014 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2014-01-02'\n" +
             "AND a2.Day = '2014-12-31'\n" +
-            "ORDER BY ABS(a2.close - a1.open) DESC\n" +
+            "ORDER BY (a2.close - a1.open) DESC\n" +
             "LIMIT 5;";
 
-    String topFiveABS2015 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ABS(a2.Close - a1.open) as 'Change'\n" +
+    String topFiveABS2015 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2015-01-02'\n" +
             "AND a2.Day = '2015-12-31'\n" +
-            "ORDER BY ABS(a2.close - a1.open) DESC\n" +
+            "ORDER BY (a2.close - a1.open) DESC\n" +
             "LIMIT 5;";
 
-    String topFiveABS2016 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ABS(a2.Close - a1.open) as 'Change'\n" +
+    String topFiveABS2016 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2016-01-04'\n" +
             "AND a2.Day = '2016-12-30'\n" +
-            "ORDER BY ABS(a2.close - a1.open) DESC\n" +
+            "ORDER BY (a2.close - a1.open) DESC\n" +
             "LIMIT 5;";
 
-    String topFive2010 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
+    String topFive2010 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ((a2.close - a1.open) / a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "\tAND a1.Day = '2010-01-04'\n" +
             "\tAND a2.Day = '2010-12-31'\n" +
-            "ORDER BY (a2.close - a1.open) DESC\n" +
+            "ORDER BY ((a2.close - a1.open) / a1.open) DESC\n" +
             "LIMIT 5;\n";
 
-    String topFive2011 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
+    String topFive2011 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ((a2.close - a1.open) / a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2011-01-03'\n" +
             "AND a2.Day = '2011-12-30'\n" +
-            "ORDER BY (a2.close - a1.open) DESC\n" +
+            "ORDER BY ((a2.close - a1.open) / a1.open) DESC\n" +
             "LIMIT 5;";
-    String topFive2012 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
+    String topFive2012 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ((a2.close - a1.open) / a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2012-01-03'\n" +
             "AND a2.Day = '2012-12-31'\n" +
-            "ORDER BY (a2.close - a1.open) DESC\n" +
+            "ORDER BY ((a2.close - a1.open) / a1.open) DESC\n" +
             "LIMIT 5;";
 
-    String topFive2013 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
+    String topFive2013 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ((a2.close - a1.open) / a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2013-01-02'\n" +
             "AND a2.Day = '2013-12-31'\n" +
-            "ORDER BY (a2.close - a1.open) DESC\n" +
+            "ORDER BY ((a2.close - a1.open) / a1.open) DESC\n" +
             "LIMIT 5;";
 
-    String topFive2014 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
+    String topFive2014 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ((a2.close - a1.open) / a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2014-01-02'\n" +
             "AND a2.Day = '2014-12-31'\n" +
-            "ORDER BY (a2.close - a1.open) DESC\n" +
+            "ORDER BY ((a2.close - a1.open) / a1.open) DESC\n" +
             "LIMIT 5;";
 
-    String topFive2015 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
+    String topFive2015 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ((a2.close - a1.open) / a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2015-01-02'\n" +
             "AND a2.Day = '2015-12-31'\n" +
-            "ORDER BY (a2.close - a1.open) DESC\n" +
+            "ORDER BY ((a2.close - a1.open) / a1.open) DESC\n" +
             "LIMIT 5;";
 
-    String topFive2016 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', (a2.Close - a1.open) as 'Change'\n" +
+    String topFive2016 = "SELECT  a1.Ticker, YEAR(a1.Day) as 'Year', ((a2.close - a1.open) / a1.open) as 'Change'\n" +
             "FROM AdjustedPrices a1, AdjustedPrices a2\n" +
             "WHERE a1.Ticker = a2.Ticker\n" +
             "AND a1.Day = '2016-01-04'\n" +
             "AND a2.Day = '2016-12-30'\n" +
-            "ORDER BY (a2.close - a1.open) DESC\n" +
+            "ORDER BY ((a2.close - a1.open) / a1.open) DESC\n" +
             "LIMIT 5;";
 }

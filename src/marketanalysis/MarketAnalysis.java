@@ -1,11 +1,16 @@
 package marketanalysis;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
 import java.sql.*;
 import java.util.ArrayList;
 
 /**
- * Created by andrewgough94 on 6/12/2017.
+ * Lab 8
+ * Andrew Gough (agough) & Jake Whipple
+ *
+ * MarketAnalysis executes sql queries and retrieves data into our
+ * java application.
  */
 public class MarketAnalysis {
 
@@ -21,6 +26,8 @@ public class MarketAnalysis {
         generateTotalStockMarketAnalysisQ1(conn);
 
         generateTotalStockMarketAnalysisQ2(conn);
+
+
 
     }
 
@@ -62,12 +69,12 @@ public class MarketAnalysis {
     }
 
     public static void generateTotalStockMarketAnalysisQ2(Connection conn) {
-        String topTenStocks = "";
+        ArrayList<String> securities = new ArrayList<>();
 
         try {
             Statement st = conn.createStatement();
             st.execute("use nyse");
-            ArrayList<String> securities = new ArrayList<>();
+
 
             ResultSet result = st.executeQuery(genQueries.topTenTraded2016);
             while(result.next()) {

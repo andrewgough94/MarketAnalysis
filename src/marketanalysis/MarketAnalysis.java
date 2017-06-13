@@ -10,21 +10,38 @@ public class MarketAnalysis {
 
     private static Connection conn;
 
+
     public static void main(String args[]) {
         System.out.println("Welcome to Market Analysis!");
         conn = initializeConnection();
 
+        generateTotalStockMarketAnalysis(conn);
 
     }
 
     public static void generateTotalStockMarketAnalysis(Connection conn) {
-        int numSecsStart2016, numSecsEnd2016;
+        String numSecsStart2016, numSecsEnd2016;
+        numSecsStart2016 = numSecsEnd2016 = "";
+        GeneralStockQueries queries = new GeneralStockQueries();
 
         try {
             Statement st = conn.createStatement();
             st.execute("use nyse");
 
-            ResultSet result = st.executeQuery(testJDBConnection.)
+            ResultSet result = st.executeQuery(queries.numSecsStart2016);
+            while(result.next()) {
+                numSecsStart2016 = result.getString(1);
+            }
+
+            result = st.executeQuery(queries.numSecsEnd2016);
+            while(result.next()) {
+                numSecsEnd2016 = result.getString(1);
+            }
+
+            System.out.println("Secs at start: " + numSecsStart2016 + " Secs at end: " + numSecsEnd2016);
+
+
+
         }
         catch (Exception ex) {
             System.out.println("Failed");

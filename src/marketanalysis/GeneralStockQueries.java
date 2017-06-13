@@ -8,4 +8,6 @@ public class GeneralStockQueries {
 
     String numSecsEnd2016 = "select count(distinct ticker) from Prices where day = (select max(distinct day) from Prices where Month(day) = 12 and Year(day) = 2016)";
 
+    public GeneralStockQueries() {}
+
 }

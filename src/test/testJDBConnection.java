@@ -37,5 +37,24 @@ public class testJDBConnection {
         }
 
         System.out.println("Connected baby!");
+        printAssignmentsTable(conn);
+    }
+
+    public static void printAssignmentsTable(Connection conn) {
+
+        System.out.println("Begin print assignments table test\n~~~~~~~~~~~~~~~~~~~~~");
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.execute("use nyse");
+            ResultSet result = stmt.executeQuery("select * from assignments");
+
+            while(result.next()) {
+                System.out.println(result.getString(1) + " " + result.getString(2));
+            }
+        }
+        catch (Exception ex) {
+            System.out.println("Print assignments table failed");
+            System.out.println(ex);
+        }
     }
 }

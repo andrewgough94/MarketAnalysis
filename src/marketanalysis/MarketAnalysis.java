@@ -2,6 +2,7 @@ package marketanalysis;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by andrewgough94 on 6/12/2017.
@@ -9,41 +10,44 @@ import java.sql.*;
 public class MarketAnalysis {
 
     private static Connection conn;
+    private static GeneralStockQueries genQueries;
 
 
     public static void main(String args[]) {
         System.out.println("Welcome to Market Analysis!");
         conn = initializeConnection();
+        genQueries = new GeneralStockQueries();
 
         generateTotalStockMarketAnalysisQ1(conn);
+
+        generateTotalStockMarketAnalysisQ2(conn);
 
     }
 
     public static void generateTotalStockMarketAnalysisQ1(Connection conn) {
         String numSecsStart2016, numSecsEnd2016, numPriceInc, numPriceDec;
         numSecsStart2016 = numSecsEnd2016 = numPriceInc = numPriceDec = "";
-        GeneralStockQueries queries = new GeneralStockQueries();
 
         try {
             Statement st = conn.createStatement();
             st.execute("use nyse");
 
-            ResultSet result = st.executeQuery(queries.numSecsStart2016);
+            ResultSet result = st.executeQuery(genQueries.numSecsStart2016);
             while(result.next()) {
                 numSecsStart2016 = result.getString(1);
             }
 
-            result = st.executeQuery(queries.numSecsEnd2016);
+            result = st.executeQuery(genQueries.numSecsEnd2016);
             while(result.next()) {
                 numSecsEnd2016 = result.getString(1);
             }
 
-            result = st.executeQuery(queries.numPriceIncreases);
+            result = st.executeQuery(genQueries.numPriceIncreases);
             while(result.next()) {
                 numPriceInc = result.getString(1);
             }
 
-            result = st.executeQuery(queries.numPriceDecreases);
+            result = st.executeQuery(genQueries.numPriceDecreases);
             while(result.next()) {
                 numPriceDec = result.getString(1);
             }
@@ -53,6 +57,31 @@ public class MarketAnalysis {
         }
         catch (Exception ex) {
             System.out.println("Failed");
+            System.out.println(ex);
+        }
+    }
+
+    public static void generateTotalStockMarketAnalysisQ2(Connection conn) {
+        String topTenStocks = "";
+
+        try {
+            Statement st = conn.createStatement();
+            st.execute("use nyse");
+            ArrayList<String> securities = new ArrayList<>();
+
+            ResultSet result = st.executeQuery(genQueries.topTenTraded2016);
+            while(result.next()) {
+                securities.add(result.getString(1));
+            }
+
+            System.out.println("Top Ten Secs by volume:");
+            int i = 0;
+            while(i < securities.size()) {
+                System.out.print(securities.get(i++) + " ");
+            }
+        }
+        catch (Exception ex) {
+            System.out.println("Failure");
             System.out.println(ex);
         }
     }

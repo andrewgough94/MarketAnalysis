@@ -1,6 +1,8 @@
 package marketanalysis;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -20,10 +22,11 @@ public class MarketAnalysis {
 
         generateTotalStockMarketAnalysisQ1(conn);
 
-        generateTotalStockMarketAnalysisQ2(conn);
+        //generateTotalStockMarketAnalysisQ2(conn);
 
-        generateTotalStockMarketAnalysisQ3(conn);
+        //generateTotalStockMarketAnalysisQ3(conn);
 
+        generateTotalStockMarketAnalysisQ5(conn);
     }
 
     public static void generateTotalStockMarketAnalysisQ1(Connection conn) {
@@ -277,6 +280,78 @@ public class MarketAnalysis {
             while(i17 < securities17.size()) {
                 System.out.print(securities17.get(i17++) + " ");
             }
+        }
+        catch (Exception ex) {
+            System.out.println("Failure");
+            System.out.println(ex);
+        }
+    }
+
+    public static void generateTotalStockMarketAnalysisQ5(Connection conn) {
+
+        try {
+            Statement st1 = conn.createStatement();
+            st1.execute("use nyse");
+
+            ResultSet result1 = st1.executeQuery(genQueries.marketAvgInc2015);
+
+            result1.next();
+
+            double marketAvg2015 = result1.getDouble(1 );
+
+            Statement st2 = conn.createStatement();
+            ResultSet result2 = st2.executeQuery(genQueries.marketAvgInc2016);
+
+            result2.next();
+
+            double marketAvg2016 = result2.getDouble(1);
+
+            Statement st3 = conn.createStatement();
+            ResultSet sectorAvg2015 = st3.executeQuery(genQueries.sectorAvgInc2015);
+
+            Statement st4 = conn.createStatement();
+            ResultSet sectorAvg2016 = st4.executeQuery(genQueries.sectorAvgInc2016);
+
+            while(sectorAvg2016.next()){
+
+                String curSector = sectorAvg2016.getString(2);
+                System.out.println();
+                System.out.println(curSector);
+                System.out.println("---------------------------------------------------------------------");
+
+                double sectAvgInc2016 = sectorAvg2016.getDouble(1);
+
+                sectorAvg2015.first();
+
+                while(!sectorAvg2015.getString(2).equals(curSector)){
+                    sectorAvg2015.next();
+                }
+
+                double sectAvgInc2015 = sectorAvg2015.getDouble(1);
+
+                System.out.println("2016 (Absolute % Increase)");
+                System.out.println("-- Sector Average: " + sectAvgInc2016);
+                System.out.println("-- Sector Average Vs. Market Average (Difference): " + (sectAvgInc2016 - marketAvg2016));
+                System.out.println();
+                System.out.println("2015 (Absolute % Increase)");
+                System.out.println("-- Sector Average: " + sectAvgInc2015);
+                System.out.println("-- Sector Average Vs. Market Average (Difference): " + (sectAvgInc2015 - marketAvg2015));
+                System.out.println();
+                System.out.println("2015 to 2016 Absolute % Improvement: " + (sectAvgInc2016 - sectAvgInc2015));
+                System.out.println();
+
+            }
+            System.out.println("Customer Discretionary: Outperforming year to year increase of other sectors. \n" +
+                    "Consumer Staples: Growth in under overal growth but not in decline.\n" +
+                    "Energy: Steady growth at market rate.\n" +
+                    "Financials: Rebounding and performing well above average.\n" +
+                    "Health Care: Nuetral\n" +
+                    "Industrials: Increasing growth well above avergae.\n" +
+                    "Information Technology: Showing resilence. \n" +
+                    "Materials: Steady\n" +
+                    "Real Estate: Decline\n" +
+                    "Utilities: Strong growth");
+
         }
         catch (Exception ex) {
             System.out.println("Failure");

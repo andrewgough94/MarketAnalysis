@@ -159,4 +159,28 @@ public class GeneralStockQueries {
             "AND a2.Day = '2016-12-30'\n" +
             "ORDER BY ((a2.close - a1.open) / a1.open) DESC\n" +
             "LIMIT 5;";
+
+    String marketAvgInc2016 = "SELECT SUM(a.Close - a.Open) * 100 / COUNT(*) as 'Avg Inc', YEAR(a.Day) as 'Year'\n" +
+            "FROM AdjustedPrices a\n" +
+            "GROUP BY YEAR(a.Day)\n" +
+            "HAVING Year = 2016;";
+
+    String marketAvgInc2015 = "SELECT SUM(a.Close - a.Open) * 100 / COUNT(*) as 'Avg Inc', YEAR(a.Day) as 'Year'\n" +
+            "FROM AdjustedPrices a\n" +
+            "GROUP BY YEAR(a.Day)\n" +
+            "HAVING Year = 2015;";
+
+    String sectorAvgInc2015 = "SELECT  SUM(a.Close - a.Open) * 100 / COUNT(*) as 'Avg Inc', s.Sector, YEAR(a.Day) as 'Year'\n" +
+            "FROM AdjustedPrices a, Securities s\n" +
+            "WHERE a.Ticker = s.Ticker\n" +
+            "\tAND s.Sector <> 'Telecommunications Services'" +
+            "GROUP BY s.Sector, YEAR(a.Day)\n" +
+            "HAVING Year = 2015;";
+
+    String sectorAvgInc2016 = "SELECT  SUM(a.Close - a.Open) * 100 / COUNT(*) as 'Avg Inc', s.Sector, YEAR(a.Day) as 'Year'\n" +
+            "FROM AdjustedPrices a, Securities s\n" +
+            "WHERE a.Ticker = s.Ticker\n" +
+            "\tAND s.Sector <> 'Telecommunications Services'" +
+            "GROUP BY s.Sector, YEAR(a.Day)\n" +
+            "HAVING Year = 2016;";
 }

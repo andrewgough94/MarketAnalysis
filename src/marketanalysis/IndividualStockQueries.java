@@ -7,31 +7,34 @@ package marketanalysis;
  * File contains the SQL queries for individual stock analytics.
  */
 public class IndividualStockQueries {
-    private static String ticker;
+    public String holder;
 
-    public IndividualStockQueries(String ticker) {
-        this.ticker = ticker;
+    public IndividualStockQueries() {
+
     }
 
     // Q1: Day range for which pricing is available
     String dateRange = "select ticker, min(day), max(day)\n" +
             "from Prices    \n" +
-            "where ticker = '" + ticker + "'";
+            "where ticker = '" + holder + "'";
+
+    public String getDateRange() {
+        return dateRange;
+    }
 
 
     // Q2: Stock performance for every year
     String performanceYearly = "select ticker, Year(day), avg(close), sum(volume), avg(volume)\n" +
             "from Prices\n" +
-            "where ticker = '" + ticker + "'\n" +
+            "where ticker = '" + holder + "'\n" +
             "group by Year(day)";
 
 
     // Q3: For 2016, show avg close price, highest, lowest, and avg daily trade by month
     String performance2016 = "select ticker, Month(day), avg(close), max(high), min(low), avg(volume)\n" +
             "from Prices\n" +
-            "where ticker = '" + ticker + "' and Year(day) = 2016\n" +
+            "where ticker = '" + holder + "' and Year(day) = 2016\n" +
             "group by Month(day);";
-
 
     // Q4: Determine the month of best performance for each year
     // Best month determined by the largest positive diff between highest price
@@ -42,7 +45,7 @@ public class IndividualStockQueries {
             "(select ticker, Year(day) as yr, Month(day) as mon,\n" +
             "min(low) as lowest, max(high) as highest, max(high) - min(low) as diff\n" +
             "from Prices\n" +
-            "where ticker = '" + ticker + "'\n" +
+            "where ticker = '" + holder + "'\n" +
             "group by year(day), Month(day)) allTable,\n" +
             "\n" +
             "(select ticker, yr, max(diff) as maxDiff\n" +
@@ -51,7 +54,7 @@ public class IndividualStockQueries {
             "(select ticker, Year(day) as yr, Month(day) as mon,\n" +
             "min(low) as lowest, max(high) as highest, max(high) - min(low) as diff\n" +
             "from Prices\n" +
-            "where ticker = '" + ticker + "'\n" +
+            "where ticker = '" + holder + "'\n" +
             "group by year(day), Month(day)) inTable\n" +
             "\n" +
             "group by ticker, yr) maxTable\n" +

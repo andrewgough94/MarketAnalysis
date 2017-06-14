@@ -1,6 +1,9 @@
 package marketanalysis;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import java.lang.reflect.*;
+import java.lang.reflect.Array;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -15,6 +18,7 @@ public class MarketAnalysis {
 
     private static Connection conn;
     private static GeneralStockQueries genQueries;
+    private static IndividualStockQueries indQueries;
 
 
     public static void main(String args[]) {
@@ -22,11 +26,17 @@ public class MarketAnalysis {
         conn = initializeConnection();
         genQueries = new GeneralStockQueries();
 
-        generateTotalStockMarketAnalysisQ1(conn);
+        // TODO: use an input file of ticker names to initialize indQueries
+        indQueries = new IndividualStockQueries();
 
+        /*generateTotalStockMarketAnalysisQ1(conn);
         generateTotalStockMarketAnalysisQ2(conn);
-
-        generateTotalStockMarketAnalysisQ3(conn);
+        generateTotalStockMarketAnalysisQ3(conn);*/
+        String ticker = "FE";
+        //generateIndividualStockAnalysisQ1(conn, ticker);
+        //generateIndividualStockAnalysisQ2(conn, ticker);
+        //generateIndividualStockAnalysisQ3(conn, ticker);
+        generateIndividualStockAnalysisQ4(conn, ticker);
 
     }
 
@@ -91,7 +101,6 @@ public class MarketAnalysis {
             System.out.println(ex);
         }
     }
-
 
     public static void generateTotalStockMarketAnalysisQ3(Connection conn){
 
@@ -284,6 +293,141 @@ public class MarketAnalysis {
         }
         catch (Exception ex) {
             System.out.println("Failure");
+            System.out.println(ex);
+        }
+    }
+
+    public static void generateIndividualStockAnalysisQ1(Connection conn, String ticker) {
+        String start, end;
+        start = end = "";
+
+        try {
+            Statement st = conn.createStatement();
+            st.execute("use nyse");
+
+            ResultSet result = st.executeQuery(indQueries.dateRange.replaceAll("null", ticker));
+
+            while(result.next()) {
+                start = result.getString(2);
+                end = result.getString(3);
+            }
+
+            System.out.println(start + " " + end);
+
+        }
+        catch (Exception ex) {
+            System.out.println("Failure in individual Q1");
+            System.out.println(ex);
+        }
+    }
+
+    public static void generateIndividualStockAnalysisQ2(Connection conn, String ticker) {
+        int yearCount = 0;
+
+        ArrayList<Integer> years = new ArrayList<>();
+        ArrayList<Double> avgPrices = new ArrayList<>();
+        ArrayList<Double> yearlyVolumes = new ArrayList<>();
+        ArrayList<Double> dailyVolumeAvg = new ArrayList<>();
+
+        ArrayList<Double> avgPricesChange = new ArrayList<>();
+        ArrayList<Double> yearlyVolumesChange = new ArrayList<>();
+        ArrayList<Double> dailyVolumeAvgChange = new ArrayList<>();
+
+        try {
+            Statement st = conn.createStatement();
+            st.execute("use nyse");
+
+            ResultSet result = st.executeQuery(indQueries.performanceYearly.replaceAll("null", ticker));
+
+            while(result.next()) {
+                yearCount++;
+                years.add(result.getInt(2));
+                avgPrices.add(result.getDouble(3));
+                yearlyVolumes.add(result.getDouble(4));
+                dailyVolumeAvg.add(result.getDouble(5));
+            }
+
+            for(int i = 0; i < yearCount; i++) {
+                System.out.println(years.get(i) + " " + avgPrices.get(i) + " " + yearlyVolumes.get(i)
+                        + " " + dailyVolumeAvg.get(i));
+            }
+
+            for (int i = 1; i < yearCount; i++) {
+                avgPricesChange.add((avgPrices.get(i) - avgPrices.get(i-1))/avgPrices.get(i-1));
+                yearlyVolumesChange.add((yearlyVolumes.get(i) - yearlyVolumes.get(i-1))/yearlyVolumes.get(i-1));
+                dailyVolumeAvgChange.add((dailyVolumeAvg.get(i) - dailyVolumeAvg.get(i-1))/dailyVolumeAvg.get(i-1));
+            }
+
+            System.out.println();
+
+            // HERE IS THE PERCENT CHANGES
+            for(int i = 0; i < yearCount-1; i++) {
+                System.out.println(years.get(i+1) + " " + avgPricesChange.get(i) + " " + yearlyVolumesChange.get(i)
+                        + " " + dailyVolumeAvgChange.get(i));
+            }
+
+        }
+        catch (Exception ex) {
+            System.out.println("Failure in individual Q1");
+            System.out.println(ex);
+        }
+    }
+
+    public static void generateIndividualStockAnalysisQ3(Connection conn, String ticker) {
+        ArrayList<Double> avgClose = new ArrayList<>();
+        ArrayList<Double> highestPrice = new ArrayList<>();
+        ArrayList<Double> lowestPrice = new ArrayList<>();
+        ArrayList<Double> avgVolume = new ArrayList<>();
+
+        try {
+            Statement st = conn.createStatement();
+            st.execute("use nyse");
+
+            ResultSet result = st.executeQuery(indQueries.performance2016.replaceAll("null", ticker));
+
+            while(result.next()) {
+                avgClose.add(result.getDouble(3));
+                highestPrice.add(result.getDouble(4));
+                lowestPrice.add(result.getDouble(5));
+                avgVolume.add(result.getDouble(6));
+            }
+
+            for(int i = 0; i < avgClose.size(); i++) {
+                System.out.println(i+1 + " " + avgClose.get(i) + " " + highestPrice.get(i) + " " + lowestPrice.get(i) +
+                    " " + avgVolume.get(i));
+            }
+
+        }
+        catch (Exception ex) {
+            System.out.println("Failure in individual Q3");
+            System.out.println(ex);
+        }
+    }
+
+    public static void generateIndividualStockAnalysisQ4(Connection conn, String ticker) {
+        ArrayList<Integer> years = new ArrayList<>();
+        ArrayList<Integer> bestMonth = new ArrayList<>();
+        ArrayList<Double> priceJump = new ArrayList<>();
+
+        try {
+            Statement st = conn.createStatement();
+            st.execute("use nyse");
+
+            ResultSet result = st.executeQuery(indQueries.bestMonths.replaceAll("null", ticker));
+
+            while(result.next()) {
+                years.add(result.getInt(2));
+                bestMonth.add(result.getInt(3));
+                priceJump.add(result.getDouble(4));
+            }
+
+            for(int i = 0; i < years.size(); i++) {
+                System.out.println(years.get(i) + " " + bestMonth.get(i) + " " + priceJump.get(i));
+            }
+
+        }
+        catch (Exception ex) {
+            System.out.println("Failure in individual Q3");
             System.out.println(ex);
         }
     }

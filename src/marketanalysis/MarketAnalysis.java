@@ -32,7 +32,7 @@ public class MarketAnalysis {
         /*generateTotalStockMarketAnalysisQ1(conn);
         generateTotalStockMarketAnalysisQ2(conn);
         generateTotalStockMarketAnalysisQ3(conn);*/
-        String ticker = "FE";
+        String ticker = "PCLN";
         //generateIndividualStockAnalysisQ1(conn, ticker);
         //generateIndividualStockAnalysisQ2(conn, ticker);
         //generateIndividualStockAnalysisQ3(conn, ticker);
@@ -434,14 +434,36 @@ public class MarketAnalysis {
     }
 
     public static void generateIndividualStockAnalysisQ5(Connection conn, String ticker) {
+        String d1 = "2015-01-01";
+        String d2 = "2015-06-01";
+        String d3 = "2015-10-01";
+        String d4 = "2016-01-01";
+        String d5 = "2016-05-01";
+        String d6 = "2016-10-01";
+
+        String res1, res2, res3, res4, res5, res6;
+        res1 = res2 = res3 = res4 = res5 = res6 = "";
+
+        res1 = rateStock(conn, ticker, d1);
+        res2 = rateStock(conn, ticker, d2);
+        res3 = rateStock(conn, ticker, d3);
+        res4 = rateStock(conn, ticker, d4);
+        res5 = rateStock(conn, ticker, d5);
+        res6 = rateStock(conn, ticker, d6);
+
+
+    }
+
+    public static String rateStock(Connection conn, String ticker, String date) {
         double fiftyDayAvg, twoHundoDayAvg, curPrice;
+        String rating = "";
         fiftyDayAvg = twoHundoDayAvg = curPrice = 0;
         try {
             Statement st = conn.createStatement();
             st.execute("use nyse");
 
             String query = indQueries.rateStock.replaceAll("null", ticker);
-            query = query.replaceAll("INSERTDATE", "2015-01-01");
+            query = query.replaceAll("INSERTDATE", date);
             ResultSet result = st.executeQuery(query);
 
             while(result.next()) {
@@ -452,11 +474,30 @@ public class MarketAnalysis {
 
             System.out.println(fiftyDayAvg + " " + twoHundoDayAvg + " " + curPrice);
 
+            // INFLATED, sell
+            if (curPrice > twoHundoDayAvg && curPrice > fiftyDayAvg) {
+                rating = "Sell";
+            }
+            // CRASHING, sell
+            else if (curPrice < twoHundoDayAvg && curPrice < fiftyDayAvg) {
+                rating = "Sell";
+            }
+            // UNDERVALUED, buy
+            else if (curPrice < twoHundoDayAvg && curPrice > fiftyDayAvg) {
+                rating = "Buy";
+            }
+            // STABLE, hold
+            else if (curPrice < fiftyDayAvg && curPrice > twoHundoDayAvg) {
+                rating = "Hold";
+            }
+
         }
         catch (Exception ex) {
             System.out.println("Failure in individual Q3");
             System.out.println(ex);
         }
+        System.out.println(date + " " + rating);
+        return rating;
     }
 
     public static Connection initializeConnection() {

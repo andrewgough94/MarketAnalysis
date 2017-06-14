@@ -36,7 +36,8 @@ public class MarketAnalysis {
         //generateIndividualStockAnalysisQ1(conn, ticker);
         //generateIndividualStockAnalysisQ2(conn, ticker);
         //generateIndividualStockAnalysisQ3(conn, ticker);
-        generateIndividualStockAnalysisQ4(conn, ticker);
+        //generateIndividualStockAnalysisQ4(conn, ticker);
+        generateIndividualStockAnalysisQ5(conn, ticker);
 
     }
 
@@ -424,6 +425,32 @@ public class MarketAnalysis {
             for(int i = 0; i < years.size(); i++) {
                 System.out.println(years.get(i) + " " + bestMonth.get(i) + " " + priceJump.get(i));
             }
+
+        }
+        catch (Exception ex) {
+            System.out.println("Failure in individual Q3");
+            System.out.println(ex);
+        }
+    }
+
+    public static void generateIndividualStockAnalysisQ5(Connection conn, String ticker) {
+        double fiftyDayAvg, twoHundoDayAvg, curPrice;
+        fiftyDayAvg = twoHundoDayAvg = curPrice = 0;
+        try {
+            Statement st = conn.createStatement();
+            st.execute("use nyse");
+
+            String query = indQueries.rateStock.replaceAll("null", ticker);
+            query = query.replaceAll("INSERTDATE", "2015-01-01");
+            ResultSet result = st.executeQuery(query);
+
+            while(result.next()) {
+                fiftyDayAvg = result.getDouble(2);
+                twoHundoDayAvg = result.getDouble(3);
+                curPrice = result.getDouble(4);
+            }
+
+            System.out.println(fiftyDayAvg + " " + twoHundoDayAvg + " " + curPrice);
 
         }
         catch (Exception ex) {

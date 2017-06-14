@@ -68,13 +68,13 @@ public class IndividualStockQueries {
             "\n" +
             "((select ticker, avg(close) as 50dayAvg from (select *\n" +
             "from Prices\n" +
-            "where ticker = '" + ticker + "' and day < 'INSERTDATE'\n" +
+            "where ticker = '" + holder + "' and day < 'INSERTDATE'\n" +
             "order by day desc\n" +
             "limit 50) 50table) t1 natural join\n" +
             "\n" +
             "(select ticker, avg(close) as 200dayAvg from (select *\n" +
             "from Prices\n" +
-            "where ticker = '" + ticker + "' and day < 'INSERTDATE'\n" +
+            "where ticker = '" + holder + "' and day < 'INSERTDATE'\n" +
             "order by day desc\n" +
             "limit 200) 200table) t2)) avgsTable natural join\n" +
             "\n" +
@@ -84,6 +84,12 @@ public class IndividualStockQueries {
             "order by day desc\n" +
             "limit 1) curPrice\n" +
             ";";
+            "limit 200) 200table) t2)) avgsTable natural join" +
+            "(select ticker, close" +
+            "from Prices" +
+            "where ticker = '" + holder + "' and day < 'INSERTDATE' " +
+            "order by day desc" +
+            "limit 1) curPrice";
 
 
 }

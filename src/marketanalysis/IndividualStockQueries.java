@@ -58,9 +58,9 @@ public class IndividualStockQueries {
 
     // Q5: Determine buy, hold, sell ratings
 
-    String rateStock = "select * from\n" +
+    String rateStock = "select * from (select * from\n" +
             "\n" +
-            "(select ticker, avg(close) as 50dayAvg from (select *\n" +
+            "((select ticker, avg(close) as 50dayAvg from (select *\n" +
             "from Prices\n" +
             "where ticker = '" + ticker + "' and day < 'INSERTDATE'\n" +
             "order by day desc\n" +
@@ -70,7 +70,14 @@ public class IndividualStockQueries {
             "from Prices\n" +
             "where ticker = '" + ticker + "' and day < 'INSERTDATE'\n" +
             "order by day desc\n" +
-            "limit 200) 200table) t2";
+            "limit 200) 200table) t2)) avgsTable natural join\n" +
+            "\n" +
+            "(select ticker, close\n" +
+            "from Prices\n" +
+            "where ticker = '" + ticker + "' and day < 'INSERTDATE'\n" +
+            "order by day desc\n" +
+            "limit 1) curPrice\n" +
+            ";";
 
 
 }

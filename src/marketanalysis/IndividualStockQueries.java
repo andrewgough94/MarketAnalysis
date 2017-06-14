@@ -13,4 +13,5 @@ public class IndividualStockQueries {
     String dateRange = "select ticker, min(day), max(day)\n" +
             "from Prices    \n" +
             "where ticker = '" + ticker + "'";
+
 }

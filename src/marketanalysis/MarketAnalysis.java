@@ -2,8 +2,14 @@ package marketanalysis;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.*;
 import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -20,6 +26,14 @@ public class MarketAnalysis {
     private static GeneralStockQueries genQueries;
     private static IndividualStockQueries indQueries;
 
+    private static BufferedWriter bw = null;
+    private static FileWriter fw = null;
+
+    private static File htmlTemplate;
+    private static String htmlString;
+
+
+
 
     public static void main(String args[]) {
         System.out.println("Welcome to Market Analysis!");
@@ -29,16 +43,44 @@ public class MarketAnalysis {
         // TODO: use an input file of ticker names to initialize indQueries
         indQueries = new IndividualStockQueries();
 
+
+        generateHtmlFile();
         /*generateTotalStockMarketAnalysisQ1(conn);
         generateTotalStockMarketAnalysisQ2(conn);
         generateTotalStockMarketAnalysisQ3(conn);*/
-        String ticker = "PCLN";
-        //generateIndividualStockAnalysisQ1(conn, ticker);
-        //generateIndividualStockAnalysisQ2(conn, ticker);
+        String ticker = "FE";
+        generateIndividualStockAnalysisQ1(conn, ticker);
+        generateIndividualStockAnalysisQ2(conn, ticker);
         //generateIndividualStockAnalysisQ3(conn, ticker);
         //generateIndividualStockAnalysisQ4(conn, ticker);
-        generateIndividualStockAnalysisQ5(conn, ticker);
+        //generateIndividualStockAnalysisQ5Q6(conn, ticker);
+        //generateIndividualStockAnalysisQ7(conn, ticker);
 
+
+        try {
+            File outputFile = new File("serious.html");
+            FileWriter fw = new FileWriter(outputFile);
+
+            fw.write(htmlString);
+            fw.close();
+
+        }
+        catch (Exception ex) {
+            System.out.println("Writing failed");
+            System.out.println(ex);
+        }
+
+    }
+
+    public static void generateHtmlFile() {
+        try {
+            htmlTemplate = new File("fake.html");
+            htmlString = new String(Files.readAllBytes(Paths.get("fake.html")));
+        }
+        catch (Exception ex) {
+            System.out.println("Error converting template.html to string");
+            System.out.println(ex);
+        }
     }
 
     public static void generateTotalStockMarketAnalysisQ1(Connection conn) {
@@ -313,8 +355,9 @@ public class MarketAnalysis {
                 end = result.getString(3);
             }
 
-            System.out.println(start + " " + end);
+            htmlString = htmlString.replaceAll("q1", ticker + " traded from: (" + start + ") to (" + end + ")");
 
+            //System.out.println(start + " " + end);
         }
         catch (Exception ex) {
             System.out.println("Failure in individual Q1");
@@ -369,7 +412,7 @@ public class MarketAnalysis {
 
         }
         catch (Exception ex) {
-            System.out.println("Failure in individual Q1");
+            System.out.println("Failure in individual Q2");
             System.out.println(ex);
         }
     }
@@ -433,7 +476,7 @@ public class MarketAnalysis {
         }
     }
 
-    public static void generateIndividualStockAnalysisQ5(Connection conn, String ticker) {
+    public static void generateIndividualStockAnalysisQ5Q6(Connection conn, String ticker) {
         String d1 = "2015-01-01";
         String d2 = "2015-06-01";
         String d3 = "2015-10-01";
@@ -444,14 +487,73 @@ public class MarketAnalysis {
         String res1, res2, res3, res4, res5, res6;
         res1 = res2 = res3 = res4 = res5 = res6 = "";
 
+        // Get stock ratings
         res1 = rateStock(conn, ticker, d1);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
+        getStockChange(conn, ticker, d1);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
         res2 = rateStock(conn, ticker, d2);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
+        getStockChange(conn, ticker, d2);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
         res3 = rateStock(conn, ticker, d3);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
+        getStockChange(conn, ticker, d3);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
         res4 = rateStock(conn, ticker, d4);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
+        getStockChange(conn, ticker, d4);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
         res5 = rateStock(conn, ticker, d5);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
+        getStockChange(conn, ticker, d5);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
         res6 = rateStock(conn, ticker, d6);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
+        getStockChange(conn, ticker, d6);
+        System.out.println("~~~~~~~~~~~~~~~~~~");
 
+        //
 
+    }
+
+    public static double getStockChange(Connection conn, String ticker, String date) {
+        Double curPrice = 0.0;
+        Double futurePrice = 0.0;
+        Double percentChange = 0.0;
+
+        try {
+            Statement st = conn.createStatement();
+            st.execute("use nyse");
+
+            String query = indQueries.curPrice.replaceAll("null", ticker);
+            query = query.replaceAll("INSERTDATE", date);
+            ResultSet result = st.executeQuery(query);
+
+            while(result.next()) {
+                curPrice = result.getDouble(2);
+            }
+
+            String query1 = indQueries.futurePrice.replaceAll("null", ticker);
+            query1 = query1.replaceAll("INSERTDATE", date);
+            ResultSet result1 = st.executeQuery(query1);
+
+            while(result1.next()) {
+                futurePrice = result1.getDouble(2);
+            }
+
+            percentChange = (futurePrice - curPrice) / curPrice;
+
+            System.out.println("curprice: " + curPrice);
+            System.out.println("futureprice: " + futurePrice);
+            System.out.println("%change: " + percentChange * 100);
+
+        }
+        catch (Exception ex) {
+            System.out.println("Failure in individual Q3");
+            System.out.println(ex);
+        }
+        return percentChange;
     }
 
     public static String rateStock(Connection conn, String ticker, String date) {
@@ -498,6 +600,34 @@ public class MarketAnalysis {
         }
         System.out.println(date + " " + rating);
         return rating;
+    }
+
+    public static void generateIndividualStockAnalysisQ7(Connection conn, String ticker) {
+
+        try {
+            Statement st = conn.createStatement();
+            st.execute("use nyse");
+
+            String query = indQueries.volumeComparisons.replaceAll("null", ticker);
+            ResultSet result = st.executeQuery(query);
+
+
+
+
+            bw.write("<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
+            + "<tr><th>TICKER</th><th>YEAR</th></tr>\n");
+
+            while(result.next()) {
+                bw.write("<tr><td><center>" + result.getString(1) + "</center></td>" + "<td><center>" +
+                result.getString(2) + "</center></td></tr>\n");
+            }
+            bw.write("</table>");
+
+        }
+        catch (Exception ex) {
+            System.out.println("Failure in individual Q3");
+            System.out.println(ex);
+        }
     }
 
     public static Connection initializeConnection() {

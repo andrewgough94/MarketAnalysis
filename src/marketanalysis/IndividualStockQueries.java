@@ -81,5 +81,36 @@ public class IndividualStockQueries {
             "order by day desc\n" +
             "limit 1) curPrice";
 
+    // Q6: Determine correctness of rating
+
+    String curPrice = "select ticker, close\n" +
+            "from Prices\n" +
+            "where ticker = '" + holder + "' and day < 'INSERTDATE'\n" +
+            "order by day desc\n" +
+            "limit 1";
+
+    String futurePrice = "select ticker, close, day\n" +
+            "from Prices\n" +
+            "where ticker = '" + holder + "' and day < DATE_ADD('INSERTDATE', interval 3 month)\n" +
+            "order by day desc\n" +
+            "limit 1";
+
+
+    // Q7: Compare stock with others
+
+    String priceComparisons = "select ticker, Month(day), avg(close)\n" +
+            "from AdjustedPrices\n" +
+            "where (ticker = 'NVDA' or ticker = 'ARNC' or ticker = 'EVHC'\n" +
+            "or ticker = 'OKE' or ticker = 'FCX' or ticker = '" + holder + "') \n" +
+            "and Year(day) = 2016\n" +
+            "group by ticker, Month(day)";
+
+    String volumeComparisons = "select ticker, Year(day), sum(volume)\n" +
+            "from AdjustedPrices\n" +
+            "where (ticker = 'NVDA' or ticker = 'ARNC' or ticker = 'EVHC'\n" +
+            "or ticker = 'OKE' or ticker = 'FCX' or ticker = '" + holder + "')\n" +
+            "and Year(day) = 2016\n" +
+            "group by ticker";
+
 
 }

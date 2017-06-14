@@ -61,4 +61,22 @@ public class IndividualStockQueries {
             "\n" +
             "where allTable.yr = maxTable.yr and allTable.diff = maxTable.maxDiff";
 
+
+    // Q5: Determine buy, hold, sell ratings
+
+    String rateStock = "select * from\n" +
+            "\n" +
+            "(select ticker, avg(close) as 50dayAvg from (select *\n" +
+            "from Prices\n" +
+            "where ticker = '" + ticker + "' and day < 'INSERTDATE'\n" +
+            "order by day desc\n" +
+            "limit 50) 50table) t1 natural join\n" +
+            "\n" +
+            "(select ticker, avg(close) as 200dayAvg from (select *\n" +
+            "from Prices\n" +
+            "where ticker = '" + ticker + "' and day < 'INSERTDATE'\n" +
+            "order by day desc\n" +
+            "limit 200) 200table) t2";
+
+
 }

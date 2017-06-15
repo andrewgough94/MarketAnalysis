@@ -11,6 +11,8 @@ import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -32,6 +34,8 @@ public class MarketAnalysis {
     private static File htmlTemplate;
     private static String htmlString;
 
+    private static DecimalFormat df = new DecimalFormat("###,###,###,###,###.##");
+
 
 
 
@@ -51,10 +55,10 @@ public class MarketAnalysis {
         String ticker = "FE";
         generateIndividualStockAnalysisQ1(conn, ticker);
         generateIndividualStockAnalysisQ2(conn, ticker);
-        //generateIndividualStockAnalysisQ3(conn, ticker);
-        //generateIndividualStockAnalysisQ4(conn, ticker);
-        //generateIndividualStockAnalysisQ5Q6(conn, ticker);
-        //generateIndividualStockAnalysisQ7(conn, ticker);
+        generateIndividualStockAnalysisQ3(conn, ticker);
+        generateIndividualStockAnalysisQ4(conn, ticker);
+        generateIndividualStockAnalysisQ5Q6(conn, ticker);
+        generateIndividualStockAnalysisQ7(conn, ticker);
 
 
         try {
@@ -391,10 +395,18 @@ public class MarketAnalysis {
                 dailyVolumeAvg.add(result.getDouble(5));
             }
 
+            String q2Table1 = "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
+                    + "<tr><th>Year</th><th>Avg Price</th><th>Yearly Volume</th><th>Daily Volume</th></tr>";
             for(int i = 0; i < yearCount; i++) {
-                System.out.println(years.get(i) + " " + avgPrices.get(i) + " " + yearlyVolumes.get(i)
-                        + " " + dailyVolumeAvg.get(i));
+                //System.out.println(years.get(i) + " " + df.format(avgPrices.get(i)) + " " + df.format(yearlyVolumes.get(i))
+                       // + " " + df.format(dailyVolumeAvg.get(i)));
+                q2Table1 = q2Table1.concat("<tr><td>" + years.get(i) +
+                        "</td><td>"  + df.format(avgPrices.get(i)) +
+                        "</td><td>" + df.format(yearlyVolumes.get(i))
+                        + "</td><td>" + df.format(dailyVolumeAvg.get(i)) + "</td><td></tr>");
             }
+            q2Table1 = q2Table1.concat("</table>");
+            htmlString = htmlString.replaceAll("q2table1", q2Table1);
 
             for (int i = 1; i < yearCount; i++) {
                 avgPricesChange.add((avgPrices.get(i) - avgPrices.get(i-1))/avgPrices.get(i-1));
@@ -404,11 +416,21 @@ public class MarketAnalysis {
 
             System.out.println();
 
-            // HERE IS THE PERCENT CHANGES
+            String q2Table2 = "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
+                    + "<tr><th>Year</th><th>Avg Price Growth</th><th>Yearly Volume Growth</th><th>Daily Volume Growth</th></tr>";
+            // HERE IS THE PERCENT CHANGE
             for(int i = 0; i < yearCount-1; i++) {
-                System.out.println(years.get(i+1) + " " + avgPricesChange.get(i) + " " + yearlyVolumesChange.get(i)
-                        + " " + dailyVolumeAvgChange.get(i));
+                //System.out.println(years.get(i+1) + " " + df.format(avgPricesChange.get(i)*100) + " "
+                  //      + df.format(yearlyVolumesChange.get(i)*100)
+                    //    + " " + df.format(dailyVolumeAvgChange.get(i)*100));
+
+                q2Table2 = q2Table2.concat("<tr><td>" + years.get(i+1) +
+                        "</td><td>" + df.format(avgPricesChange.get(i)*100) + " %" +
+                        "</td><td>" + df.format(yearlyVolumesChange.get(i)*100) + "%"
+                        + "</td><td>" + df.format(dailyVolumeAvgChange.get(i)*100) + "%" + "</td><td></tr>");
             }
+            q2Table2 = q2Table2.concat("</table>");
+            htmlString = htmlString.replaceAll("q2table2", q2Table2);
 
         }
         catch (Exception ex) {
@@ -436,10 +458,34 @@ public class MarketAnalysis {
                 avgVolume.add(result.getDouble(6));
             }
 
+            /*
+            String q2Table1 = "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
+                    + "<tr><th>Year</th><th>Avg Price</th><th>Yearly Volume</th><th>Daily Volume</th></tr>";
+
+                q2Table1 = q2Table1.concat("<tr><td>" + years.get(i) +
+                        "</td><td>"  + df.format(avgPrices.get(i)) +
+                        "</td><td>" + df.format(yearlyVolumes.get(i))
+                        + "</td><td>" + df.format(dailyVolumeAvg.get(i)) + "</td><td></tr>");
+
+            q2Table1 = q2Table1.concat("</table>");
+            htmlString = htmlString.replaceAll("q2table1", q2Table1);
+            */
+
+            String q3Table = "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%> " +
+                    "<tr><th>Month</th><th>Avg Close</th><th>Max High</th><th>Min Low</th><th>Avg Daily Volume</th></tr>";
             for(int i = 0; i < avgClose.size(); i++) {
-                System.out.println(i+1 + " " + avgClose.get(i) + " " + highestPrice.get(i) + " " + lowestPrice.get(i) +
-                    " " + avgVolume.get(i));
+                //System.out.println(i+1 + " " + avgClose.get(i) + " " + highestPrice.get(i) + " " + lowestPrice.get(i) +
+                //    " " + avgVolume.get(i));
+
+                q3Table = q3Table.concat("<tr><td>" + new DateFormatSymbols().getMonths()[i] +
+                        "</td><td>"  + df.format(avgClose.get(i)) +
+                        "</td><td>" + df.format(highestPrice.get(i))
+                        + "</td><td>" + df.format(lowestPrice.get(i))
+                        + "</td><td>" + df.format(avgVolume.get(i))
+                        + "</td><td></tr>");
             }
+            q3Table = q3Table.concat("</table>");
+            htmlString = htmlString.replaceAll("q3table", q3Table);
 
         }
         catch (Exception ex) {
@@ -465,9 +511,17 @@ public class MarketAnalysis {
                 priceJump.add(result.getDouble(4));
             }
 
+            String q4Table = "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>" +
+                    "           <tr><th>Year</th><th>Best Month</th><th>Price Increase (start-end of month)</th></tr>";
             for(int i = 0; i < years.size(); i++) {
-                System.out.println(years.get(i) + " " + bestMonth.get(i) + " " + priceJump.get(i));
+                //System.out.println(years.get(i) + " " + bestMonth.get(i) + " " + priceJump.get(i));
+                q4Table = q4Table.concat("<tr><td>" + years.get(i) +
+                    "</td><td>" + new DateFormatSymbols().getMonths()[i] +
+                        "</td><td>"  + df.format(priceJump.get(i)) +
+                        "</td><td></tr>");
             }
+            q4Table = q4Table.concat("</table>");
+            htmlString = htmlString.replaceAll("q4table", q4Table);
 
         }
         catch (Exception ex) {
@@ -489,38 +543,43 @@ public class MarketAnalysis {
 
         // Get stock ratings
         res1 = rateStock(conn, ticker, d1);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
-        getStockChange(conn, ticker, d1);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("rating1", res1);
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("eval1", getStockChange(conn, ticker, d1, res1));
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
         res2 = rateStock(conn, ticker, d2);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
-        getStockChange(conn, ticker, d2);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("rating2", res2);
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("eval2", getStockChange(conn, ticker, d2, res2));
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
         res3 = rateStock(conn, ticker, d3);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
-        getStockChange(conn, ticker, d3);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("rating3", res3);
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("eval3", getStockChange(conn, ticker, d3, res3));
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
         res4 = rateStock(conn, ticker, d4);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
-        getStockChange(conn, ticker, d4);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("rating4", res4);
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("eval4", getStockChange(conn, ticker, d4, res4));
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
         res5 = rateStock(conn, ticker, d5);
+        htmlString = htmlString.replaceAll("rating5", res5);
         System.out.println("~~~~~~~~~~~~~~~~~~");
-        getStockChange(conn, ticker, d5);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("eval5", getStockChange(conn, ticker, d5, res5));
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
         res6 = rateStock(conn, ticker, d6);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
-        getStockChange(conn, ticker, d6);
-        System.out.println("~~~~~~~~~~~~~~~~~~");
-
-        //
+        htmlString = htmlString.replaceAll("rating6", res6);
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
+        htmlString = htmlString.replaceAll("eval6", getStockChange(conn, ticker, d6, res6));
+        //System.out.println("~~~~~~~~~~~~~~~~~~");
 
     }
 
-    public static double getStockChange(Connection conn, String ticker, String date) {
+    public static String getStockChange(Connection conn, String ticker, String date, String rating) {
         Double curPrice = 0.0;
         Double futurePrice = 0.0;
         Double percentChange = 0.0;
+        String ret = "";
 
         try {
             Statement st = conn.createStatement();
@@ -544,16 +603,45 @@ public class MarketAnalysis {
 
             percentChange = (futurePrice - curPrice) / curPrice;
 
-            System.out.println("curprice: " + curPrice);
-            System.out.println("futureprice: " + futurePrice);
-            System.out.println("%change: " + percentChange * 100);
+            //System.out.println("curprice: " + curPrice);
+            //System.out.println("futureprice: " + futurePrice);
+            //System.out.println("%change: " + percentChange * 100);
+
+
+            if(rating.equals("Buy")) {
+                if(percentChange > 0) {
+                    ret = "Correct rating... ";
+                }
+                else {
+                    ret = "Incorrect rating... ";
+                }
+            }
+            else if(rating.equals("Hold")) {
+                if(percentChange > -.03 && percentChange < .03) {
+                    ret = "Correct rating... ";
+                }
+                else {
+                    ret = "Incorrect rating... ";
+                }
+            }
+            else if(rating.equals("Sell")) {
+                if(percentChange < 0) {
+                    ret = "Correct rating... ";
+                }
+                else {
+                    ret = "Incorrect rating... ";
+                }
+            }
+
+
+            ret = ret + "Price % Change: " + df.format(percentChange * 100);
 
         }
         catch (Exception ex) {
             System.out.println("Failure in individual Q3");
             System.out.println(ex);
         }
-        return percentChange;
+        return ret;
     }
 
     public static String rateStock(Connection conn, String ticker, String date) {
@@ -574,7 +662,7 @@ public class MarketAnalysis {
                 curPrice = result.getDouble(4);
             }
 
-            System.out.println(fiftyDayAvg + " " + twoHundoDayAvg + " " + curPrice);
+            //System.out.println(fiftyDayAvg + " " + twoHundoDayAvg + " " + curPrice);
 
             // INFLATED, sell
             if (curPrice > twoHundoDayAvg && curPrice > fiftyDayAvg) {
@@ -595,10 +683,10 @@ public class MarketAnalysis {
 
         }
         catch (Exception ex) {
-            System.out.println("Failure in individual Q3");
+            System.out.println("Failure in individual Q5");
             System.out.println(ex);
         }
-        System.out.println(date + " " + rating);
+        //System.out.println(date + " " + rating);
         return rating;
     }
 
@@ -608,27 +696,38 @@ public class MarketAnalysis {
             Statement st = conn.createStatement();
             st.execute("use nyse");
 
-            String query = indQueries.volumeComparisons.replaceAll("null", ticker);
+            String query = indQueries.priceComparisons.replaceAll("null", ticker);
             ResultSet result = st.executeQuery(query);
-
-
-
-
-            bw.write("<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>"
-            + "<tr><th>TICKER</th><th>YEAR</th></tr>\n");
-
+            String q7Table1 = "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>" +
+                    "           <tr><th>Ticker</th><th>Month</th><th>Avg Price</th></tr>";
             while(result.next()) {
-                bw.write("<tr><td><center>" + result.getString(1) + "</center></td>" + "<td><center>" +
-                result.getString(2) + "</center></td></tr>\n");
+                q7Table1 = q7Table1.concat("<tr><td>" + result.getString(1) +
+                        "</td><td>" + new DateFormatSymbols().getMonths()[result.getInt(2)-1] +
+                        "</td><td>"  + df.format(result.getDouble(3)) +
+                        "</td><td></tr>");
             }
-            bw.write("</table>");
+            q7Table1 = q7Table1.concat("</table>");
+            htmlString = htmlString.replaceAll("q7table1", q7Table1);
 
+            String query1 = indQueries.volumeComparisons.replaceAll("null", ticker);
+            ResultSet result1 = st.executeQuery(query1);
+            String q7Table2 = "<table BORDER=1 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>" +
+                    "           <tr><th>Ticker</th><th>Year</th><th>Total Volume</th></tr>";
+            while(result1.next()) {
+                q7Table2 = q7Table2.concat("<tr><td>" + result1.getString(1) +
+                        "</td><td>" + result1.getInt(2) +
+                        "</td><td>"  + result1.getLong(3) +
+                        "</td><td></tr>");
+            }
+            q7Table2 = q7Table2.concat("</table>");
+            htmlString = htmlString.replaceAll("q7table2", q7Table2);
         }
         catch (Exception ex) {
             System.out.println("Failure in individual Q3");
             System.out.println(ex);
         }
     }
+
 
     public static Connection initializeConnection() {
         // Initialize connection

@@ -42,10 +42,11 @@ public class GeneralStockQueries {
             "where price2015.ticker = price2016.ticker\n" +
             "and price2015.close > price2016.close";
 
-    String topTenTraded2016 = "select ticker, sum(volume) as totalVol\n" +
-            "from Prices\n" +
-            "where Year(day) = 2016\n" +
-            "group by ticker\n" +
+    String topTenTraded2016 = "select p.ticker, s.name, sum(p.volume) as totalVol\n" +
+            "from Prices p, Securities s\n" +
+            "where Year(p.day) = 2016\n" +
+            "and s.ticker = p.ticker\n" +
+            "group by p.ticker\n" +
             "order by totalVol desc\n" +
             "limit 10;";
 

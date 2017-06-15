@@ -25,14 +25,14 @@ public class IndividualStockQueries {
 
     // Q2: Stock performance for every year
     String performanceYearly = "select ticker, Year(day), avg(close), sum(volume), avg(volume)\n" +
-            "from Prices\n" +
+            "from AdjustedPrices\n" +
             "where ticker = '" + holder + "'\n" +
             "group by Year(day)";
 
 
     // Q3: For 2016, show avg close price, highest, lowest, and avg daily trade by month
     String performance2016 = "select ticker, Month(day), avg(close), max(high), min(low), avg(volume)\n" +
-            "from Prices\n" +
+            "from AdjustedPrices\n" +
             "where ticker = '" + holder + "' and Year(day) = 2016\n" +
             "group by Month(day);";
 
@@ -44,7 +44,7 @@ public class IndividualStockQueries {
             "\n" +
             "(select ticker, Year(day) as yr, Month(day) as mon,\n" +
             "min(low) as lowest, max(high) as highest, max(high) - min(low) as diff\n" +
-            "from Prices\n" +
+            "from AdjustedPrices\n" +
             "where ticker = '" + holder + "'\n" +
             "group by year(day), Month(day)) allTable,\n" +
             "\n" +
@@ -53,7 +53,7 @@ public class IndividualStockQueries {
             "\n" +
             "(select ticker, Year(day) as yr, Month(day) as mon,\n" +
             "min(low) as lowest, max(high) as highest, max(high) - min(low) as diff\n" +
-            "from Prices\n" +
+            "from AdjustedPrices\n" +
             "where ticker = '" + holder + "'\n" +
             "group by year(day), Month(day)) inTable\n" +
             "\n" +
@@ -66,17 +66,17 @@ public class IndividualStockQueries {
 
     String rateStock = "select * from (select * from " +
             "((select ticker, avg(close) as 50dayAvg from (select *\n" +
-            "from Prices\n" +
+            "from AdjustedPrices\n" +
             "where ticker = '" + holder + "' and day < 'INSERTDATE'\n" +
             "order by day desc\n" +
             "limit 50) 50table) t1 natural join" +
             "(select ticker, avg(close) as 200dayAvg from (select *\n" +
-            "from Prices\n" +
+            "from AdjustedPrices\n" +
             "where ticker = '" + holder + "' and day < 'INSERTDATE'\n" +
             "order by day desc\n" +
             "limit 200) 200table) t2)) avgsTable natural join" +
             "(select ticker, close\n" +
-            "from Prices\n" +
+            "from AdjustedPrices\n" +
             "where ticker = '" + holder + "' and day < 'INSERTDATE'\n" +
             "order by day desc\n" +
             "limit 1) curPrice";
@@ -84,13 +84,13 @@ public class IndividualStockQueries {
     // Q6: Determine correctness of rating
 
     String curPrice = "select ticker, close\n" +
-            "from Prices\n" +
+            "from AdjustedPrices\n" +
             "where ticker = '" + holder + "' and day < 'INSERTDATE'\n" +
             "order by day desc\n" +
             "limit 1";
 
     String futurePrice = "select ticker, close, day\n" +
-            "from Prices\n" +
+            "from AdjustedPrices\n" +
             "where ticker = '" + holder + "' and day < DATE_ADD('INSERTDATE', interval 3 month)\n" +
             "order by day desc\n" +
             "limit 1";
@@ -110,6 +110,19 @@ public class IndividualStockQueries {
             "where (ticker = 'NVDA' or ticker = 'ARNC' or ticker = 'EVHC'\n" +
             "or ticker = 'OKE' or ticker = 'FCX' or ticker = '" + holder + "')\n" +
             "and Year(day) = 2016\n" +
+            "group by ticker";
+
+    // Q8:
+    String price2Comparisons = "select ticker, Month(day), avg(close)\n" +
+            "from AdjustedPrices\n" +
+            "where (ticker = 'FE' or ticker = 'PCLN' or ticker = 'MA'\n" +
+            "or ticker = 'GPC') and Year(day) = 2016\n" +
+            "group by ticker, Month(day)";
+
+    String volume2Comparisons = "select ticker, Year(day), sum(volume)\n" +
+            "from AdjustedPrices\n" +
+            "where (ticker = 'FE' or ticker = 'PCLN' or ticker = 'MA'\n" +
+            "or ticker = 'GPC') and Year(day) = 2016\n" +
             "group by ticker";
 
 

@@ -1,3 +1,44 @@
 MarketAnalysis - Lab8
 
 Andrew Gough & Jake Whipple
+
+
+COMPILE Instructions:
+
+
+
+
+RUN Instructions:
+
+
+
+Stock Evaluation Methodology:
+
+Individual Stock Data
+Q4: Best month performance
+-Based on largest price increase from beginning of end to the month
+
+Q5: Stock Ratings
+- In order to rate a stock we used SQL queries to obtain a current price, a 50 day, and 200 day average price for a given security.
+- If the current price is above both the 50 day avg, and 200 day avg, stock is inflated: sell
+- If the current price is below the 50 day avg, and above the 200 day avg, stock is stable: hold
+- If the current price is below the 200 day avg, and above the 50 day avg, stock has momentum: buy
+- If the current price is below the 200 day avg, and below the 50 day avg, stock is falling: sell
+
+Q6: Stock Rating Evaluation
+- Using the current rating date price, and the price 3 months in the future, we obtained a % change in stock price.
+- If rating is a buy:
+    - And if % change > -2%
+        - rating is correct
+    - else
+        - rating is incorrect
+- If rating is a hold
+    - And if % change > -3% AND % change < +3%
+        - rating is correct
+    - else
+        - rating is incorrect
+- If rating is a sell
+    - And if % change < +2%
+        - rating is correct
+    - else
+        - rating is incorrect

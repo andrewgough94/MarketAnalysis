@@ -2,7 +2,7 @@ package marketanalysis;
 
 /**
  * Lab 8
- * Andrew Gough (agough) & Jake Whipple
+ * Andrew Gough (agough) & Jake Whipple (jwhipple)
  *
  * File contains the SQL queries for general stock analytics.
  */
@@ -45,10 +45,10 @@ public class GeneralStockQueries {
             "where price2015.ticker = price2016.ticker\n" +
             "and price2015.close > price2016.close";
 
-    String topTenTraded2016 = "select ticker, sum(volume) as totalVol\n" +
-            "from Prices\n" +
-            "where Year(day) = 2016\n" +
-            "group by ticker\n" +
+    String topTenTraded2016 = "select p.ticker, s.name, sum(volume) as totalVol\n" +
+            "from Prices p, Securities s\n" +
+            "where Year(p.day) = 2016 and p.ticker = s.ticker\n" +
+            "group by p.ticker\n" +
             "order by totalVol desc\n" +
             "limit 10;";
 
@@ -162,4 +162,28 @@ public class GeneralStockQueries {
             "AND a2.Day = '2016-12-30'\n" +
             "ORDER BY ((a2.close - a1.open) / a1.open) DESC\n" +
             "LIMIT 5;";
+
+    String marketAvgInc2016 = "SELECT SUM(a.Close - a.Open) * 100 / COUNT(*) as 'Avg Inc', YEAR(a.Day) as 'Year'\n" +
+            "FROM AdjustedPrices a\n" +
+            "GROUP BY YEAR(a.Day)\n" +
+            "HAVING Year = 2016;";
+
+    String marketAvgInc2015 = "SELECT SUM(a.Close - a.Open) * 100 / COUNT(*) as 'Avg Inc', YEAR(a.Day) as 'Year'\n" +
+            "FROM AdjustedPrices a\n" +
+            "GROUP BY YEAR(a.Day)\n" +
+            "HAVING Year = 2015;";
+
+    String sectorAvgInc2015 = "SELECT  SUM(a.Close - a.Open) * 100 / COUNT(*) as 'Avg Inc', s.Sector, YEAR(a.Day) as 'Year'\n" +
+            "FROM AdjustedPrices a, Securities s\n" +
+            "WHERE a.Ticker = s.Ticker\n" +
+            "\tAND s.Sector <> 'Telecommunications Services'" +
+            "GROUP BY s.Sector, YEAR(a.Day)\n" +
+            "HAVING Year = 2015;";
+
+    String sectorAvgInc2016 = "SELECT  SUM(a.Close - a.Open) * 100 / COUNT(*) as 'Avg Inc', s.Sector, YEAR(a.Day) as 'Year'\n" +
+            "FROM AdjustedPrices a, Securities s\n" +
+            "WHERE a.Ticker = s.Ticker\n" +
+            "\tAND s.Sector <> 'Telecommunications Services'" +
+            "GROUP BY s.Sector, YEAR(a.Day)\n" +
+            "HAVING Year = 2016;";
 }
